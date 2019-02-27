@@ -7,7 +7,7 @@ import moment from 'moment'
 import PropTypes from 'prop-types'
 import { withRouter } from 'react-router-dom'
 import styled from 'styled-components'
-import BookingWidget from '../bookingWidget/bookingWidget'
+import BookingWidget from '../bfx-booking-widget/BookingWidget'
 
 class AppPage extends Component {
   static propTypes = {
