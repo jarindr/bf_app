@@ -23,7 +23,8 @@ const enhance = compose(
   )
 )
 const Container = styled.div`
-  display: flex;
+  background-color: #1b262d;
+  padding: 20px;
   > div {
     flex: 1 1 auto;
   }
@@ -32,7 +33,8 @@ const Container = styled.div`
 const TradeRow = styled.div`
   position: relative;
   color: white;
-  background: rgba(0, 0, 0, 0.6);
+  padding: 2px;
+  white-space: nowrap;
 `
 const BgLeft = styled.div.attrs({
   style: ({ percent }) => ({
@@ -40,11 +42,11 @@ const BgLeft = styled.div.attrs({
   })
 })`
   position: absolute;
-  z-index: -1;
+  z-index: 1;
   left: 0;
   top: 0;
   bottom: 0;
-  background: rgba(255, 0, 0, 0.6);
+  background-color: #83332f;
 `
 const BgRight = styled.div.attrs({
   style: ({ percent }) => ({
@@ -52,11 +54,18 @@ const BgRight = styled.div.attrs({
   })
 })`
   position: absolute;
-  z-index: -1;
+  background-color: #77903e;
+  opacity: 0.5;
+  z-index: 1;
   right: 0;
   top: 0;
   bottom: 0;
-  background: rgba(255, 0, 0, 0.6);
+`
+const TradeItem = styled.div`
+  width: 50px;
+  display: inline-block;
+  position: relative;
+  z-index: 2;
 `
 class AppPage extends Component {
   static propTypes = {
@@ -64,7 +73,8 @@ class AppPage extends Component {
     fetchBookStream: PropTypes.func,
     trades: PropTypes.array,
     books: PropTypes.object,
-    match: PropTypes.object
+    match: PropTypes.object,
+    selectBooks: PropTypes.func
   }
   state = { precision: 0 }
 
@@ -92,6 +102,12 @@ class AppPage extends Component {
       })
     }
   }
+  getMaxTotal (books) {
+    return Math.max(
+      ...books.bids.map(x => Number(x.total)),
+      ...books.asks.map(x => Math.abs(Number(x.total)))
+    )
+  }
   render () {
     const books = this.props.selectBooks(
       this.props.match.params.symbol,
@@ -105,12 +121,13 @@ class AppPage extends Component {
           <div>
             {books.bids &&
               books.bids.map(bid => {
-                const max = books.bids[books.bids.length - 1].total
                 const cur = bid.total
                 return (
                   <TradeRow key={bid.price}>
-                    <BgRight percent={(cur / max) * 100} />
-                    {bid.count} {bid.total} {bid.price.toFixed(1)}
+                    <BgRight percent={(cur / this.getMaxTotal(books)) * 100} />
+                    <TradeItem>{bid.count}</TradeItem>{' '}
+                    <TradeItem>{bid.amount.toFixed(2)}</TradeItem>{' '}
+                    <TradeItem>{bid.total}</TradeItem> <TradeItem>{bid.price}</TradeItem>
                   </TradeRow>
                 )
               })}
@@ -119,12 +136,13 @@ class AppPage extends Component {
           <div>
             {books.asks &&
               books.asks.map(ask => {
-                const max = books.asks[books.asks.length - 1].total
-                const cur = ask.total
+                const cur = Math.abs(ask.total)
                 return (
                   <TradeRow key={ask.price}>
-                    <BgLeft percent={(cur / max) * 100} />
-                    {ask.price.toFixed(1)} {Math.abs(ask.total)} {ask.count.toFixed(2)}
+                    <BgLeft percent={(cur / this.getMaxTotal(books)) * 100} />
+                    <TradeItem>{ask.price}</TradeItem> <TradeItem>{Math.abs(ask.total)}</TradeItem>{' '}
+                    <TradeItem>{Math.abs(ask.amount).toFixed(2)}</TradeItem>
+                    <TradeItem>{ask.count}</TradeItem>
                   </TradeRow>
                 )
               })}

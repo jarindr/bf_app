@@ -5,7 +5,7 @@ import Routes from '../routes/routes'
 import { ThemeProvider } from 'styled-components'
 import PropTypes from 'prop-types'
 import 'reset-css'
-
+import './global.css'
 const theme = {}
 
 class App extends Component {
