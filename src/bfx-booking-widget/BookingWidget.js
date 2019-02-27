@@ -25,6 +25,7 @@ const enhance = compose(
 const Container = styled.div`
   background-color: #1b262d;
   padding: 20px;
+  margin: 10px;
   > div {
     flex: 1 1 auto;
   }
