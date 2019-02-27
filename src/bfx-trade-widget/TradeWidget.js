@@ -18,6 +18,7 @@ const Container = styled.div`
   padding: 20px;
   background-color: #1b262d;
   margin: 10px;
+  border-radius: 4px;
 `
 const RowItem = styled.div.attrs({
   style: ({ ask }) => ({

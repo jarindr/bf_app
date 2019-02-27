@@ -26,6 +26,9 @@ const Container = styled.div`
   background-color: #1b262d;
   padding: 20px;
   margin: 10px;
+  width: 470px;
+  height: 410px;
+  border-radius: 4px;
   > div {
     flex: 1 1 auto;
   }
@@ -67,6 +70,12 @@ const TradeItem = styled.div`
   display: inline-block;
   position: relative;
   z-index: 2;
+`
+const BookingContainer = styled.div`
+  display: flex;
+  > div {
+    flex: 1 1 auto;
+  }
 `
 class AppPage extends Component {
   static propTypes = {
@@ -118,7 +127,7 @@ class AppPage extends Component {
       <Container>
         <button onClick={this.onClickAddPrecision}>+</button>
         <button onClick={this.onClickRemovePrecision}>-</button>
-        <div style={{ display: 'flex' }}>
+        <BookingContainer>
           <div>
             {books.bids &&
               books.bids.map(bid => {
@@ -148,7 +157,7 @@ class AppPage extends Component {
                 )
               })}
           </div>
-        </div>
+        </BookingContainer>
       </Container>
     )
   }

@@ -12,6 +12,7 @@ const Container = styled.div`
   display: inline-block;
   background-color: #1b262d;
   padding: 20px;
+  border-radius: 4px;
   margin: 10px;
   > div {
     flex: 1 1 auto;
