@@ -6,8 +6,10 @@ import { selectTicker } from '../entity/ticker/selector'
 import { withRouter } from 'react-router-dom'
 import { fetchTickerStream } from '../entity/ticker/action'
 import styled from 'styled-components'
+import symbolMapper from '../entity/symbol/symbolMapper'
 
 const Container = styled.div`
+  display: inline-block;
   background-color: #1b262d;
   padding: 20px;
   margin: 10px;
@@ -16,6 +18,15 @@ const Container = styled.div`
   }
 `
 
+const RowContainer = styled.div`
+  display: flex;
+  > div:first-child {
+    margin-right: 50px;
+  }
+  > div > div {
+    margin: 5px;
+  }
+`
 const enhance = compose(
   withRouter,
   connect(
@@ -38,18 +49,29 @@ class TradeWidget extends Component {
   }
 
   render () {
+    const ticker = symbolMapper[this.props.match.params.symbol]
     return (
       <Container>
         {this.props.ticker && (
-          <div>
-            <div>{this.props.ticker.ask.toFixed(1)}</div>
-            <div>LAST PRICE: {this.props.ticker.last_price.toFixed(1)}</div>
-            <div>VOLUME: {(this.props.ticker.last_price * this.props.ticker.volume).toFixed(1)}</div>
-            <div>LOW: {this.props.ticker.low.toFixed(1)}</div>
-            <div>HIGH: {this.props.ticker.high.toFixed(1)}</div>
-            <div>{this.props.ticker.daily_change.toFixed(2)}</div>
-            <div>{(this.props.ticker.daily_change_perc * 100).toFixed(2)}</div>
-          </div>
+          <RowContainer>
+            <div>
+              <div>{ticker}</div>
+              <div>
+                VOLUME: {(this.props.ticker.last_price * this.props.ticker.volume).toFixed(1)}{' '}
+                {ticker.split('/')[1]}
+              </div>
+              <div>LOW: {this.props.ticker.low.toFixed(1)}</div>
+            </div>
+            <div>
+              <div>LAST PRICE: {this.props.ticker.last_price.toFixed(1)}</div>
+              <div>
+                {this.props.ticker.daily_change.toFixed(2)} (
+                {(this.props.ticker.daily_change_perc * 100).toFixed(2)}%)
+              </div>
+
+              <div>HIGH: {this.props.ticker.high.toFixed(1)}</div>
+            </div>
+          </RowContainer>
         )}
       </Container>
     )

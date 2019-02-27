@@ -15,10 +15,12 @@ class AppPage extends Component {
 
   render () {
     return (
-      <div style={{display: 'flex'}}>
-        <BookingWidget />
-        <TradeWidget />
+      <div>
         <TickerWidget />
+        <div style={{ display: 'flex' }}>
+          <BookingWidget />
+          <TradeWidget />
+        </div>
       </div>
     )
   }
