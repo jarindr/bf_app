@@ -1,8 +1,8 @@
 import createReducer from '../../reducer/createReducer'
-import { serialize } from './helper'
+import { serialize } from './serializer'
 import _ from 'lodash'
 
-function handleBookSnapshotMessage (state, { data, channel }) {
+function handleBookSnapshotMessage(state, { data, channel }) {
   const transform = data.map(d => serialize(d))
   return {
     [channel.symbol]: {
@@ -23,7 +23,7 @@ function handleBookSnapshotMessage (state, { data, channel }) {
   }
 }
 
-function handleBooUpdateMessage (state, { data, channel }) {
+function handleBooUpdateMessage(state, { data, channel }) {
   const transform = serialize(data)
   let newBids = { ...state[channel.symbol].bids }
   let newAsks = { ...state[channel.symbol].asks }
