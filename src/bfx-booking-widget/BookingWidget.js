@@ -1,9 +1,8 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { compose } from 'redux'
-import { fetchBookStream, unsubscribe } from '../entity/book/action'
+import { fetchBookStream } from '../entity/book/action'
 import { selectAsksAndBids } from '../entity/book/selector'
-import moment from 'moment'
 import PropTypes from 'prop-types'
 import { withRouter } from 'react-router-dom'
 import styled from 'styled-components'
@@ -20,7 +19,7 @@ const enhance = compose(
     (state, props) => ({
       selectBooks: selectAsksAndBids(state)
     }),
-    { fetchBookStream, unsubscribe }
+    { fetchBookStream }
   )
 )
 const Container = styled.div`
@@ -93,7 +92,7 @@ class AppPage extends Component {
       })
     }
   }
-  render() {
+  render () {
     const books = this.props.selectBooks(
       this.props.match.params.symbol,
       precisionMap[this.state.precision] || {}

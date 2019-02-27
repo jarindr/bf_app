@@ -1,6 +1,6 @@
 import _ from 'lodash'
 class SocketConnector {
-  constructor(url, params = {}) {
+  constructor (url, params = {}) {
     if (!url) {
       throw new Error('socket URL is not provided.')
     }
@@ -21,7 +21,7 @@ class SocketConnector {
     }
     this.queue = []
   }
-  setParams(params) {
+  setParams (params) {
     this.params = Object.assign(this.params, params)
   }
   onConnect = resolve => () => {
@@ -45,7 +45,7 @@ class SocketConnector {
     })
   }
 
-  on(event, handler) {
+  on (event, handler) {
     switch (event) {
       case 'connected':
         return (this.handleOnConnected = handler)
@@ -55,14 +55,14 @@ class SocketConnector {
         return (this.handleOnMessage = handler)
     }
   }
-  async reconnect() {
+  async reconnect () {
     setTimeout(async () => {
       console.log('reconnecting websocket...')
       console.log('pending queue', this.queue)
       await this.connect()
     }, this.reconnectInterval)
   }
-  connect() {
+  connect () {
     return new Promise((resolve, reject) => {
       this.socket = new this.WebSocket(this.url)
       this.socket.addEventListener('open', this.onConnect(resolve))
@@ -94,7 +94,7 @@ class SocketConnector {
         this.handleOnMessage(msg)
     }
   }
-  getConnectionStatus() {
+  getConnectionStatus () {
     return this.connectionStateMap[this.socket.readyState]
   }
 
