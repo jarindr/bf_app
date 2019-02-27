@@ -7,6 +7,7 @@ import { withRouter } from 'react-router-dom'
 import { fetchTradeStream } from '../entity/trade/action'
 import moment from 'moment'
 import styled from 'styled-components'
+import { precisionFixed } from '../entity/symbol/symbolMapper'
 const TradeItem = styled.div`
   width: 50px;
   display: inline-block;
@@ -63,7 +64,8 @@ class TradeWidget extends Component {
     this.props.fetchTradeStream(this.props.match.params.symbol)
   }
 
-  render () {
+  render() {
+    const precision = precisionFixed[this.props.match.params.symbol]
     return (
       <Container>
         <RowButton>Trades</RowButton>
@@ -77,7 +79,7 @@ class TradeWidget extends Component {
             <RowItem key={i} ask={x.amount > 0}>
               <TradeItem>{moment(x.mts).format('hh:mm:ss')}</TradeItem>{' '}
               <TradeItem>{Math.abs(x.amount).toFixed(2)}</TradeItem>{' '}
-              <TradeItem>{x.price}</TradeItem>
+              <TradeItem>{precision ? x.price.toFixed(precision) : x.price}</TradeItem>
             </RowItem>
           ))}
       </Container>
