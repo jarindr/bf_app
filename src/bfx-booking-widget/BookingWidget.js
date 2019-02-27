@@ -133,7 +133,7 @@ class AppPage extends Component {
                 )
               })}
           </div>
-          <div style={{ padding: '0 5px' }} />
+          <div style={{ padding: '0 1px' }} />
           <div>
             {books.asks &&
               books.asks.map(ask => {
