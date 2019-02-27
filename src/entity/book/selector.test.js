@@ -3,7 +3,7 @@ describe('books', () => {
   test('[selectAsksAndBids] should select the state in store and return acc total correctly plus sorted', () => {
     const state = {
       books: {
-        tBTCUSD: {
+        'tBTCUSD-P0': {
           bids: {
             3900: {
               price: 3900,
@@ -41,7 +41,7 @@ describe('books', () => {
         }
       }
     }
-    const selected = selectAsksAndBids(state)('tBTCUSD')
+    const selected = selectAsksAndBids(state)('tBTCUSD', 'P0')
     expect(selected).toEqual({
       asks: [
         { amount: -2, count: 1, price: 4300, total: '-2.00' },
