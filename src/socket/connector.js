@@ -99,21 +99,18 @@ class SocketConnector {
   }
 
   send = payload => {
-    if (!_.includes(this.queue, payload)) {
+    if (!_.some(this.queue, payload)) {
       console.log('Adding to queue', payload)
       this.queue.push(payload)
-      if (this.getConnectionStatus() === 'CONNECTED') {
-        this.drainQueue()
-      }
+    }
+    if (this.getConnectionStatus() === 'CONNECTED') {
+      this.drainQueue()
     } else {
       try {
         if (!this.socket) {
           console.log(
             `attempt to join channel : ${payload} when socket is not initialized, added to queue.`
           )
-        } else {
-          console.log('Sending payload:', payload)
-          this.socket.send(JSON.stringify(payload))
         }
       } catch (error) {
         console.warn('something went wrong while joining channel with error', error)
