@@ -129,13 +129,13 @@ class AppPage extends Component {
     )
   }
   onClickScaleUp = e => {
-    if (this.state.scale <= 1) {
-      this.setState(({ scale }) => ({ scale: scale + 0.1 }))
+    if (this.state.scale < 1) {
+      this.setState(({ scale }) => ({ scale: scale + 0.1 >= 1 ? 1 : scale + 0.1 }))
     }
   }
   onClickScaleDown = e => {
     if (this.state.scale >= 0.1) {
-      this.setState(({ scale }) => ({ scale: scale - 0.1 }))
+      this.setState(({ scale }) => ({ scale: scale - 0.1 <= 0.1 ? 0.1 : scale - 0.1 }))
     }
   }
   render () {
@@ -148,10 +148,10 @@ class AppPage extends Component {
         <RowButton>
           <div>ORDERBOOK</div>
           <div>
-            <button onClick={this.onClickAddPrecision}>+</button>
-            <button onClick={this.onClickRemovePrecision}>-</button>
-            <button onClick={this.onClickScaleUp}>^</button>
-            <button onClick={this.onClickScaleDown}>v</button>
+            <button onClick={this.onClickAddPrecision}>+ precision</button>
+            <button onClick={this.onClickRemovePrecision}>- precision</button>
+            <button onClick={this.onClickScaleUp}>scale up</button>
+            <button onClick={this.onClickScaleDown}>scale down</button>
           </div>
         </RowButton>
         <BookingContainer>
