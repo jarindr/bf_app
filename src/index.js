@@ -19,6 +19,9 @@ socket.handleunsubscribedMessage = msg => {
   store.dispatch({ type: 'SOCKET_MESSAGE/UNSUBSCRIBED/RECEIVE', data: msg })
 }
 
+setInterval(() => {
+  store.dispatch({ type: 'SOCKET/STATUS', data: socket.getConnectionStatus() })
+}, 1000)
 window.disconnect = socket.disconnect
 
 const SocketContext = React.createContext()

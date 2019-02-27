@@ -12,12 +12,8 @@ const Button = styled.button`
 `
 class AppPage extends Component {
   static propTypes = {
-    fetchTradeStream: PropTypes.func,
-    fetchBookStream: PropTypes.func,
-    trades: PropTypes.array,
-    books: PropTypes.object,
-    match: PropTypes.object,
-    disconnect: PropTypes.func
+    disconnect: PropTypes.func,
+    status: PropTypes.string
   }
   state = { precision: 0 }
   onClickDisconnect = e => {
@@ -33,6 +29,7 @@ class AppPage extends Component {
         </div>
         <div>
           <Button onClick={this.onClickDisconnect}>DISCONECT WEBSOCKET</Button>
+          {this.props.status}
         </div>
       </div>
     )
@@ -40,6 +37,6 @@ class AppPage extends Component {
 }
 
 export default connect(
-  state => state,
+  state => ({ status: state.socketStatus }),
   { disconnect }
 )(AppPage)

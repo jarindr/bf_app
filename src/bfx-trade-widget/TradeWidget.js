@@ -64,7 +64,7 @@ class TradeWidget extends Component {
     this.props.fetchTradeStream(this.props.match.params.symbol)
   }
 
-  render() {
+  render () {
     const precision = precisionFixed[this.props.match.params.symbol]
     return (
       <Container>
