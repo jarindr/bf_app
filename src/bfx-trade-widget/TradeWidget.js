@@ -19,21 +19,28 @@ const Container = styled.div`
   background-color: #1b262d;
   margin: 10px;
   border-radius: 4px;
+  width: 300px;
 `
 const RowItem = styled.div.attrs({
   style: ({ ask }) => ({
     backgroundColor: ask ? ' #83332f' : '#77903e'
   })
 })`
-  padding: 2px;
+  padding: 2px 7px;
+  display: flex;
+  justify-content: space-between;
 `
 const RowButton = styled.div`
   height: 30px;
   display: flex;
   align-items: center;
-  >div:nth-child(2) {
+  > div:nth-child(2) {
     margin-left: auto;
   }
+`
+const RowHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
 `
 
 const enhance = compose(
@@ -60,12 +67,17 @@ class TradeWidget extends Component {
     return (
       <Container>
         <RowButton>Trades</RowButton>
+        <RowHeader style={{ marginBottom: '5px' }}>
+          <TradeItem>TIME</TradeItem>
+          <TradeItem>AMOUNT</TradeItem>
+          <TradeItem>PRICE</TradeItem>
+        </RowHeader>
         {this.props.trades &&
           this.props.trades.map((x, i) => (
             <RowItem key={i} ask={x.amount > 0}>
               <TradeItem>{moment(x.mts).format('hh:mm:ss')}</TradeItem>{' '}
               <TradeItem>{Math.abs(x.amount).toFixed(2)}</TradeItem>{' '}
-              <TradeItem>{x.price.toFixed(2)}</TradeItem>
+              <TradeItem>{x.price}</TradeItem>
             </RowItem>
           ))}
       </Container>

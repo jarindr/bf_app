@@ -6,7 +6,7 @@ import { selectTicker } from '../entity/ticker/selector'
 import { withRouter } from 'react-router-dom'
 import { fetchTickerStream } from '../entity/ticker/action'
 import styled from 'styled-components'
-import symbolMapper from '../entity/symbol/symbolMapper'
+import { splitSymbol } from '../entity/symbol/symbolMapper'
 
 const Container = styled.div`
   display: inline-block;
@@ -50,7 +50,7 @@ class TradeWidget extends Component {
   }
 
   render () {
-    const ticker = symbolMapper[this.props.match.params.symbol]
+    const ticker = splitSymbol(this.props.match.params.symbol)
     return (
       <Container>
         {this.props.ticker && (

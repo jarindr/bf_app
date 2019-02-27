@@ -26,8 +26,8 @@ const Container = styled.div`
   background-color: #1b262d;
   padding: 10px 20px 20px 20px;
   margin: 10px;
-  width: 470px;
-  height: 410px;
+  width: 600px;
+  height: 430px;
   border-radius: 4px;
   > div {
     flex: 1 1 auto;
@@ -38,7 +38,9 @@ const TradeRow = styled.div`
   position: relative;
   color: white;
   padding: 2px;
+  justify-content: space-between;
   white-space: nowrap;
+  display: flex;
 `
 const BgLeft = styled.div.attrs({
   style: ({ percent }) => ({
@@ -66,15 +68,15 @@ const BgRight = styled.div.attrs({
   bottom: 0;
 `
 const TradeItem = styled.div`
-  width: 50px;
-  display: inline-block;
+  flex: 1 1 50px;
   position: relative;
   z-index: 2;
+  text-align: left;
 `
 const BookingContainer = styled.div`
   display: flex;
   > div {
-    flex: 1 1 auto;
+    flex: 0 1 100%;
   }
 `
 const RowButton = styled.div`
@@ -154,6 +156,10 @@ class AppPage extends Component {
         </RowButton>
         <BookingContainer>
           <div>
+            <TradeRow style={{ marginBottom: '5px' }}>
+              <TradeItem>COUNT</TradeItem> <TradeItem>AMOUNT</TradeItem>{' '}
+              <TradeItem>TOTAL</TradeItem> <TradeItem>PRICE</TradeItem>
+            </TradeRow>
             {books.bids &&
               books.bids.map(bid => {
                 const cur = bid.total
@@ -167,8 +173,13 @@ class AppPage extends Component {
                 )
               })}
           </div>
-          <div style={{ padding: '0 1px' }} />
           <div>
+            <TradeRow style={{ marginBottom: '5px' }}>
+              <TradeItem>PRICE</TradeItem>
+              <TradeItem>TOTAL</TradeItem>
+              <TradeItem>AMOUNT</TradeItem>
+              <TradeItem>COUNT</TradeItem>
+            </TradeRow>
             {books.asks &&
               books.asks.map(ask => {
                 const cur = Math.abs(ask.total)
