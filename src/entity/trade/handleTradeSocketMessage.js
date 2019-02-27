@@ -1,4 +1,4 @@
-export const handleTradeSocketMesssage = message => store => {
+export const handleTradeSocketMessage = message => store => {
   const channelId = message[0]
   if (Array.isArray(message[1])) {
     return store.dispatch({
