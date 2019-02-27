@@ -23,8 +23,8 @@ const Container = styled.div`
   width: 300px;
 `
 const RowItem = styled.div.attrs({
-  style: ({ ask }) => ({
-    backgroundColor: ask ? ' #83332f' : '#77903e'
+  style: ({ ask, max }) => ({
+    backgroundColor: ask ? `rgba(131,51,47,${max ? 1 : 0.5})` : `rgba(119,144,62,${max ? 1 : 0.5})`
   })
 })`
   padding: 2px 7px;
@@ -66,6 +66,7 @@ class TradeWidget extends Component {
 
   render () {
     const precision = precisionFixed[this.props.match.params.symbol]
+    console.log(_.maxBy(this.props.trades, 'amount'))
     return (
       <Container>
         <RowButton>Trades</RowButton>
@@ -76,7 +77,11 @@ class TradeWidget extends Component {
         </RowHeader>
         {this.props.trades &&
           this.props.trades.map((x, i) => (
-            <RowItem key={i} ask={x.amount > 0}>
+            <RowItem
+              key={i}
+              ask={x.amount > 0}
+              max={_.maxBy(this.props.trades, 'amount').mts === x.mts}
+            >
               <TradeItem>{moment(x.mts).format('hh:mm:ss')}</TradeItem>{' '}
               <TradeItem>{Math.abs(x.amount).toFixed(2)}</TradeItem>{' '}
               <TradeItem>{precision ? x.price.toFixed(precision) : x.price}</TradeItem>
