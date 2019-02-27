@@ -24,7 +24,7 @@ const enhance = compose(
 )
 const Container = styled.div`
   background-color: #1b262d;
-  padding: 20px;
+  padding: 10px 20px 20px 20px;
   margin: 10px;
   width: 470px;
   height: 410px;
@@ -77,6 +77,14 @@ const BookingContainer = styled.div`
     flex: 1 1 auto;
   }
 `
+const RowButton = styled.div`
+  height: 30px;
+  display: flex;
+  align-items: center;
+  > div:nth-child(2) {
+    margin-left: auto;
+  }
+`
 class AppPage extends Component {
   static propTypes = {
     fetchTradeStream: PropTypes.func,
@@ -86,7 +94,7 @@ class AppPage extends Component {
     match: PropTypes.object,
     selectBooks: PropTypes.func
   }
-  state = { precision: 0 }
+  state = { precision: 0, scale: 1 }
 
   componentDidMount = () => {
     this.props.fetchBookStream(this.props.match.params.symbol, precisionMap[this.state.precision])
@@ -118,6 +126,16 @@ class AppPage extends Component {
       ...books.asks.map(x => Math.abs(Number(x.total)))
     )
   }
+  onClickScaleUp = e => {
+    if (this.state.scale <= 1) {
+      this.setState(({ scale }) => ({ scale: scale + 0.1 }))
+    }
+  }
+  onClickScaleDown = e => {
+    if (this.state.scale >= 0.1) {
+      this.setState(({ scale }) => ({ scale: scale - 0.1 }))
+    }
+  }
   render () {
     const books = this.props.selectBooks(
       this.props.match.params.symbol,
@@ -125,8 +143,15 @@ class AppPage extends Component {
     )
     return (
       <Container>
-        <button onClick={this.onClickAddPrecision}>+</button>
-        <button onClick={this.onClickRemovePrecision}>-</button>
+        <RowButton>
+          <div>ORDERBOOK</div>
+          <div>
+            <button onClick={this.onClickAddPrecision}>+</button>
+            <button onClick={this.onClickRemovePrecision}>-</button>
+            <button onClick={this.onClickScaleUp}>^</button>
+            <button onClick={this.onClickScaleDown}>v</button>
+          </div>
+        </RowButton>
         <BookingContainer>
           <div>
             {books.bids &&
@@ -134,7 +159,7 @@ class AppPage extends Component {
                 const cur = bid.total
                 return (
                   <TradeRow key={bid.price}>
-                    <BgRight percent={(cur / this.getMaxTotal(books)) * 100} />
+                    <BgRight percent={this.state.scale * (cur / this.getMaxTotal(books)) * 100} />
                     <TradeItem>{bid.count}</TradeItem>{' '}
                     <TradeItem>{bid.amount.toFixed(2)}</TradeItem>{' '}
                     <TradeItem>{bid.total}</TradeItem> <TradeItem>{bid.price}</TradeItem>
@@ -149,7 +174,7 @@ class AppPage extends Component {
                 const cur = Math.abs(ask.total)
                 return (
                   <TradeRow key={ask.price}>
-                    <BgLeft percent={(cur / this.getMaxTotal(books)) * 100} />
+                    <BgLeft percent={this.state.scale * (cur / this.getMaxTotal(books)) * 100} />
                     <TradeItem>{ask.price}</TradeItem> <TradeItem>{Math.abs(ask.total)}</TradeItem>{' '}
                     <TradeItem>{Math.abs(ask.amount).toFixed(2)}</TradeItem>
                     <TradeItem>{ask.count}</TradeItem>

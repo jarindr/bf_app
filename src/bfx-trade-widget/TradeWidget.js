@@ -15,7 +15,7 @@ const TradeItem = styled.div`
 `
 
 const Container = styled.div`
-  padding: 20px;
+  padding: 10px 20px 20px 20px;
   background-color: #1b262d;
   margin: 10px;
   border-radius: 4px;
@@ -26,6 +26,14 @@ const RowItem = styled.div.attrs({
   })
 })`
   padding: 2px;
+`
+const RowButton = styled.div`
+  height: 30px;
+  display: flex;
+  align-items: center;
+  >div:nth-child(2) {
+    margin-left: auto;
+  }
 `
 
 const enhance = compose(
@@ -51,6 +59,7 @@ class TradeWidget extends Component {
   render () {
     return (
       <Container>
+        <RowButton>Trades</RowButton>
         {this.props.trades &&
           this.props.trades.map((x, i) => (
             <RowItem key={i} ask={x.amount > 0}>
