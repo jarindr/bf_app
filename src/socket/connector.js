@@ -1,6 +1,6 @@
 import _ from 'lodash'
 class SocketConnector {
-  constructor (url, params = {}) {
+  constructor(url, params = {}) {
     if (!url) {
       throw new Error('socket URL is not provided.')
     }
@@ -11,6 +11,7 @@ class SocketConnector {
     this.handleOnDisconnected = () => {}
     this.handleOnMessage = () => {}
     this.handleSubscribedMessage = () => {}
+    this.handleUnsubscribedMessage = () => {}
     this.WebSocket = WebSocket
     this.connectionStateMap = {
       '0': 'CONNECTING',
@@ -19,9 +20,8 @@ class SocketConnector {
       '3': 'DISCONNECTED'
     }
     this.queue = []
-    this.eventMap = {}
   }
-  setParams (params) {
+  setParams(params) {
     this.params = Object.assign(this.params, params)
   }
   onConnect = resolve => () => {
@@ -41,12 +41,11 @@ class SocketConnector {
 
   drainQueue = () => {
     this.queue.forEach(q => {
-      console.log('Draining queue', q)
       this.socket.send(JSON.stringify(q))
     })
   }
 
-  on (event, handler) {
+  on(event, handler) {
     switch (event) {
       case 'connected':
         return (this.handleOnConnected = handler)
@@ -56,14 +55,14 @@ class SocketConnector {
         return (this.handleOnMessage = handler)
     }
   }
-  async reconnect () {
+  async reconnect() {
     setTimeout(async () => {
       console.log('reconnecting websocket...')
       console.log('pending queue', this.queue)
       await this.connect()
     }, this.reconnectInterval)
   }
-  connect () {
+  connect() {
     return new Promise((resolve, reject) => {
       this.socket = new this.WebSocket(this.url)
       this.socket.addEventListener('open', this.onConnect(resolve))
@@ -80,9 +79,13 @@ class SocketConnector {
     const msg = JSON.parse(message.data)
     switch (msg.event) {
       case 'subscribed':
-        this.eventMap[msg.chanId] = msg
         console.log('Subscribed to:', msg)
         this.handleSubscribedMessage(msg)
+        break
+      case 'unsubscribed':
+        this.queue = this.queue.filter(p => p.chanId !== msg.chanId)
+        console.log('Unsubscribed :', msg)
+        this.handleUnsubscribedMessage(msg)
         break
       case 'info':
         console.log('socket info', msg)
@@ -91,7 +94,7 @@ class SocketConnector {
         this.handleOnMessage(msg)
     }
   }
-  getConnectionStatus () {
+  getConnectionStatus() {
     return this.connectionStateMap[this.socket.readyState]
   }
 
@@ -99,6 +102,9 @@ class SocketConnector {
     if (!_.includes(this.queue, payload)) {
       console.log('Adding to queue', payload)
       this.queue.push(payload)
+      if (this.getConnectionStatus() === 'CONNECTED') {
+        this.drainQueue()
+      }
     } else {
       try {
         if (!this.socket) {

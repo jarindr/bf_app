@@ -1,16 +1,17 @@
 import _ from 'lodash'
-export const selectAsksAndBids = state => symbol => {
-  const bids = state.books[symbol] ? state.books[symbol].bids : {}
-  const asks = state.books[symbol] ? state.books[symbol].asks : {}
+export const selectAsksAndBids = state => (symbol, precision) => {
+  const key = `${symbol}-${precision}`
+  const bids = state.books[key] ? state.books[key].bids : {}
+  const asks = state.books[key] ? state.books[key].asks : {}
   const sortedBids = _(bids)
     .keys()
-    .map(d => state.books[symbol].bids[d])
+    .map(d => state.books[key].bids[d])
     .sortBy(bid => -bid.price)
     .value()
 
   const sortedAsks = _(asks)
     .keys()
-    .map(d => state.books[symbol].asks[d])
+    .map(d => state.books[key].asks[d])
     .sortBy(ask => ask.price)
     .value()
 

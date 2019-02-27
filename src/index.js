@@ -8,11 +8,17 @@ import { handleWebsocketMessage } from './socket/handleMessage'
 const socket = new SocketConnector('wss://api-pub.bitfinex.com/ws/2')
 
 socket.connect()
-socket.on('message', msg => handleWebsocketMessage(store)(msg, socket.eventMap))
+socket.on('message', msg => handleWebsocketMessage(store)(msg))
 const store = configureStore({}, { socket })
+
 socket.handleSubscribedMessage = msg => {
   store.dispatch({ type: 'SOCKET_MESSAGE/SUBSCRIBED/RECEIVE', data: msg })
 }
+
+socket.handleunsubscribedMessage = msg => {
+  store.dispatch({ type: 'SOCKET_MESSAGE/UNSUBSCRIBED/RECEIVE', data: msg })
+}
+
 const SocketContext = React.createContext()
 
 // RENDER APP
