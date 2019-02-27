@@ -148,6 +148,12 @@ class AppPage extends Component {
         <RowButton>
           <div>ORDERBOOK</div>
           <div>
+            <button disabled style={{ border: 'none', backgroundColor: 'transparent' }}>
+              precision: {precisionMap[this.state.precision]}
+            </button>
+            <button disabled style={{ border: 'none', backgroundColor: 'transparent' }}>
+              scale: {this.state.scale.toFixed(1)}
+            </button>
             <button onClick={this.onClickAddPrecision}>+ precision</button>
             <button onClick={this.onClickRemovePrecision}>- precision</button>
             <button onClick={this.onClickScaleUp}>scale up</button>
